@@ -1,1 +1,2 @@
-But bot
+
+Geologiya Fanlari universiteting Murojaat boti 
