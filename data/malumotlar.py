@@ -10,6 +10,8 @@ qabul = Xodim('Qabul komisyasi', 917999618)
 buxgalteriya = Xodim('Buxgalteriya', 917999618)
 registrator = Xodim('Registrator ofis', 917999618)
 hemis = Xodim('Hemis', 917999618)
+test1 = Xodim("Test1", 13372189)
+
 
 
 # Bu yerga ham kiritildi
@@ -21,6 +23,7 @@ xodimlar = {
     'buxgalteriya': buxgalteriya,
     'registrator': registrator,
     'qabul': qabul,
+    'test1': test1,
 }
 
 

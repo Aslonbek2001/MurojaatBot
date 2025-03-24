@@ -17,8 +17,8 @@ class SubscriptionMiddleware(BaseMiddleware):
         if not_subscribed:
             await event.answer(
                 "Quyidagi kanallarga obuna bo'ling:\n" +
-                "\n".join([f"{channel}" for channel in not_subscribed])
+                "\n".join([f"{channel}" for channel in not_subscribed]), reply_markup=
             )
-            return  # Agar obuna bo'lmasa, hech qanday qo'shimcha harakat qilmaydi
+            return  
 
         return await handler(event, data)

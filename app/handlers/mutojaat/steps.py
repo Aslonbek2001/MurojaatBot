@@ -2,7 +2,6 @@ from aiogram import Router, types, F
 from aiogram.fsm.context import FSMContext
 import re
 
-
 from app.keyboards.inline.step_one_buttons import get_murojatchilar     #step_one_buttons
 from app.keyboards.inline.step_two_buttons import get_murojat_turlari   #step_two_buttons
 from app.keyboards.inline.step_three_buttons import get_xodimlar        # step_three_buttons
@@ -12,6 +11,7 @@ from app.states import MurojaatStates
 from app.utils import dict_keys_to_set, phone_reg, format_phone_number
 from app.keyboards.inline.menu_btns import menu_btns
 from data.malumotlar import xodimlar, murojatchilar, murojat_turlari
+from app.db.queryies import add_murojaat
 
 murojaat_router = Router()
 
@@ -37,8 +37,6 @@ async def step_two(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.edit_text(
         "Murojaat maqsadi?", reply_markup=await get_murojat_turlari()
     )
-
-
 
 """Murojaat maqsadi tugmasi bosilganda"""
 @murojaat_router.callback_query(F.data.in_(dict_keys_to_set(murojat_turlari)), MurojaatStates.step_two)
@@ -95,8 +93,21 @@ async def step_five(message: types.Message, state: FSMContext):
 """Telefon raqami kiritilganda"""
 @murojaat_router.message(MurojaatStates.step_five)
 async def step_six(message: types.Message, state: FSMContext):
+    print(f"\n\n\n\n\n")
+    print(message.text)
+    print(f"\n\n\n\n\n")
+    print(len(message.contact.phone_number))
+    print(f"\n\n\n\n\n")
+    phone_number = 0
 
-    phone_number = message.text if message.text else f"+{message.contact.phone_number}"
+    if message.text:
+        phone_number = message.text
+    else:
+        if len(message.contact.phone_number) == 12:
+            phone_number = f"+{message.contact.phone_number}"
+        else:
+            phone_number = message.contact.phone_number
+
     if phone_reg(phone_number.replace(" ", "")):
         await state.update_data(phone_number=format_phone_number(phone_number))
         await state.set_state(MurojaatStates.step_six)
@@ -146,6 +157,16 @@ async def step_eight(callback: types.CallbackQuery, state: FSMContext):
     
     if callback.data == 'send':
         await callback.bot.send_message(chat_id=xodimlar.get(data['murojaat_to']).tg_id, text=murojaat_text, parse_mode="HTML")
+        
+        await add_murojaat(
+                user_id=data['user_id'],
+                full_name=data['full_name'], 
+                phone=data['phone_number'], 
+                your_position=murojatchilar.get(data['user_type']), 
+                department=xodimlar.get(data['murojaat_to']).name, 
+                murojaat_type=murojat_turlari.get(data['murojaat_type']), 
+                description=data['murojaat_text'] )
+           
         await state.clear()
         await callback.message.answer("✅ Murojaatingiz yuborildi.")
         await callback.message.answer("Asosiy menu", reply_markup=menu_btns)

@@ -1,29 +1,46 @@
 import re
-from data.malumotlar import CHANNELS
+from data.malumotlar import CHANNELS, xodimlar
 from aiogram.exceptions import TelegramBadRequest
 from typing import Tuple
 import logging
+
+UZ_PHONE_REGEX = r"^(?:\+998|998)?(90|91|93|94|95|97|98|99|33|88)\d{7}$"
+pattern = r"^\+998\d{9}$|^\d{9}$"
+
 
 def dict_keys_to_set(dictionary):
     return set(dictionary.keys())
 
 
+def get_admin_users_id(user_id):
+    for key in xodimlar:
+        if xodimlar[key].tg_id == user_id:
+            return True  
+    
+    return False  
+
+def get_admin_name(admin_id):
+    for key in xodimlar:
+        if xodimlar[key].tg_id == admin_id:
+            return f" {xodimlar[key].name} "
+    
+    return ' Mutaxassis '
+    
+
+
+
 def extract_text(text):
     start = text.find("(")
     end = text.find(")", start)
-
     if start != -1 and end != -1:
         return text[start+1:end]  # Qavslarni o‘chirib, faqat ichidagi matnni olish
     return None
-
-
-
-pattern = r"^\+998\d{9}$|^\d{9}$"
 
 def phone_reg(number):
     if re.match(pattern, number):
         return True
     return False
+
 
 def format_phone_number(phone: str) -> str:
     # Faqat raqamlarni olish
@@ -38,6 +55,7 @@ def format_phone_number(phone: str) -> str:
         return "❌ Noto‘g‘ri raqam"
     
 
+
 async def check_subscription(bot, user_id: int, channels: Tuple[str]):
         """Foydalanuvchining barcha kanallarga obuna bo'lganligini tekshiradi."""
         not_subscribed = []
@@ -50,3 +68,10 @@ async def check_subscription(bot, user_id: int, channels: Tuple[str]):
                 logging.error(f"Kanalni tekshirishda xatolik: {e}")
                 not_subscribed.append(channel)
         return not_subscribed
+
+
+def beauty_print(data: dict):
+    for key in data:
+        print(f"key: {data[key]}\n")
+
+

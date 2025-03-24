@@ -1,2 +1,1 @@
-
-Geologiya Fanlari universiteting Murojaat boti 
+Geologiya Fanlari universiteting Murojaat boti.
