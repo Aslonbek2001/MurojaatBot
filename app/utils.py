@@ -56,18 +56,48 @@ def format_phone_number(phone: str) -> str:
     
 
 
-async def check_subscription(bot, user_id: int, channels: Tuple[str]):
-        """Foydalanuvchining barcha kanallarga obuna bo'lganligini tekshiradi."""
-        not_subscribed = []
-        for channel in channels:
-            try:
-                member = await bot.get_chat_member(chat_id=channel, user_id=user_id)
-                if member.status in ["left", "kicked"]:
-                    not_subscribed.append(channel)
-            except TelegramBadRequest as e:
-                logging.error(f"Kanalni tekshirishda xatolik: {e}")
-                not_subscribed.append(channel)
-        return not_subscribed
+# async def check_subscription(bot, user_id: int, channels: set[str]):
+#         """Foydalanuvchining barcha kanallarga obuna bo'lganligini tekshiradi."""
+#         not_subscribed = []
+#         for channel in channels:
+#             try:
+#                 member = await bot.get_chat_member(chat_id=channel, user_id=user_id)
+#                 if member.status in ["left", "kicked"]:
+#                     not_subscribed.append(channel)
+#             except TelegramBadRequest as e:
+#                 logging.error(f"Kanalni tekshirishda xatolik: {e}")
+#                 not_subscribed.append(channel)
+#         return not_subscribed
+
+
+async def is_not_subscribed(bot, user_id: int, channel: str) -> bool:
+    """Foydalanuvchi obuna bo‘lmagan kanalni tekshiradi."""
+    try:
+        member = await bot.get_chat_member(chat_id=channel, user_id=user_id)
+        return member.status in {"left", "kicked"}
+    except TelegramBadRequest as e:
+        logging.error(f"Kanalni tekshirishda xatolik: {e}")
+        return True  
+    
+
+async def check_subscription(bot, user_id: int, channels: set[str]):
+    """Foydalanuvchining barcha kanallarga obuna bo'lganligini tekshiradi."""
+    not_subscribed = [
+        channel
+        for channel in channels
+        if await is_not_subscribed(bot, user_id, channel)
+    ]
+    return not_subscribed
+
+
+
+
+
+
+
+
+
+
 
 
 def beauty_print(data: dict):

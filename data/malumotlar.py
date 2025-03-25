@@ -1,8 +1,8 @@
 from app.states import Xodim
 
 ###################################################
-########### Universitet xodimlari uchun ###########
-
+######## 👇 Universitet xodimlari uchun 👇 #########
+###################################################
 
 rektor = Xodim('Rektor1', 917999618)
 korupsiya = Xodim('Korupsiyaga qarshi kurashish', 917999618)
@@ -10,11 +10,9 @@ qabul = Xodim('Qabul komisyasi', 917999618)
 buxgalteriya = Xodim('Buxgalteriya', 917999618)
 registrator = Xodim('Registrator ofis', 917999618)
 hemis = Xodim('Hemis', 917999618)
-test1 = Xodim("Test1", 13372189)
 
 
-
-# Bu yerga ham kiritildi
+# 👇 Xodim kiritilgandan So'ng Pastga ham qo'shiladi 👇
 
 xodimlar = {
     'rektor': rektor,
@@ -23,7 +21,6 @@ xodimlar = {
     'buxgalteriya': buxgalteriya,
     'registrator': registrator,
     'qabul': qabul,
-    'test1': test1,
 }
 
 
@@ -43,6 +40,7 @@ murojatchilar = {
 
 ###################################################
 ################ Murojaat turi. ###################
+###################################################
 
 
 murojat_turlari = {
@@ -54,7 +52,14 @@ murojat_turlari = {
 }
 
 
-CHANNELS = ("@testgfufff",)
+###################################################
+################# CHANNELS ########################
+###################################################
+path_to_channel ='https://t.me/'
+
+CHANNELS = {
+        "@testgfufff": "GFU|Rasmiy kanali",
+    }
 
 
 

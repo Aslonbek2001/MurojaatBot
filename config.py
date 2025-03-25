@@ -11,3 +11,6 @@ DATABASE_URL = "sqlite+aiosqlite:///database.db"
 
 # DATABASE_URL = f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
+# 3 ta tilda 
+# Statisika:
+# Murojaatlar soni, Javob berilganlar soni, kimga nechta javob bergani haqida ma'lumot

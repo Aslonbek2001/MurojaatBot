@@ -6,6 +6,7 @@ from aiogram import Bot, Dispatcher
 
 from app.handlers.start import start_command
 from app.handlers.mutojaat.steps import murojaat_router
+from app.handlers.subscribe_handler import subscription_router
 from app.handlers.mutojaat.murojaatlar import murojaatlar_router
 from app.handlers.admin.handlers import admin_router
 from app.handlers.help import help_command
@@ -27,6 +28,7 @@ if __name__ == "__main__":
     dp.message.middleware(SubscriptionMiddleware())
     dp.message.register(start_command, CommandStart())
     dp.message.register(help_command, Command(commands=["help"]))
+    dp.include_router(subscription_router)
     dp.include_router(murojaat_router)
     dp.include_router(murojaatlar_router)
     dp.include_router(admin_router)
