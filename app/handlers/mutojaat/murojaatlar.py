@@ -1,7 +1,7 @@
 from aiogram import Router, types, F
 from app.keyboards.inline.menu_btns import menu_btns
 
-from app.db.queryies import get_murojaatlar
+from app.db.queries import get_murojaatlar
 
 
 murojaatlar_router = Router()

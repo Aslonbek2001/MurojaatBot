@@ -11,7 +11,7 @@ from app.states import MurojaatStates
 from app.utils import dict_keys_to_set, phone_reg, format_phone_number
 from app.keyboards.inline.menu_btns import menu_btns
 from data.malumotlar import xodimlar, murojatchilar, murojat_turlari
-from app.db.queryies import add_murojaat
+from app.db.queries import add_murojaat
 
 murojaat_router = Router()
 
@@ -77,7 +77,7 @@ async def step_four(callback: types.CallbackQuery, state: FSMContext):
 @murojaat_router.message(MurojaatStates.step_four)
 async def step_five(message: types.Message, state: FSMContext):
     if 6 < len(message.text) < 30:
-        await state.update_data(full_name=message.text)
+        await state.update_data(full_name=str(message.text))
         await state.set_state(MurojaatStates.step_five)
         
         await message.answer(
@@ -93,13 +93,7 @@ async def step_five(message: types.Message, state: FSMContext):
 """Telefon raqami kiritilganda"""
 @murojaat_router.message(MurojaatStates.step_five)
 async def step_six(message: types.Message, state: FSMContext):
-    print(f"\n\n\n\n\n")
-    print(message.text)
-    print(f"\n\n\n\n\n")
-    print(len(message.contact.phone_number))
-    print(f"\n\n\n\n\n")
     phone_number = 0
-
     if message.text:
         phone_number = message.text
     else:
