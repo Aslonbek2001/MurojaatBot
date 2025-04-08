@@ -15,6 +15,6 @@ async def start_command(message: types.Message, state: FSMContext):
     # Check if the user is a staff member (xodim)
     if message.from_user.id in [xodim.tg_id for xodim in xodimlar.values()]:
         await state.set_state(AdminStates.admin)
-        await message.answer("Assalomu alaykum \nBu bot orqali foydalanuvchilardan kelgan murojatlarga javob yozishingiz mumkin!")
+        await message.answer("Assalomu alaykum \nBu bot orqali foydalanuvchilardan kelgan murojatlarga javob yozishingiz mumkin!", reply_markup=menu_btns)
     else:
         await message.answer("Assalomu alaykum \nGFU murojaat botiga hush kelibsiz!", reply_markup=menu_btns)

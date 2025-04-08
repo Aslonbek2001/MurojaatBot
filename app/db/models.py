@@ -7,7 +7,7 @@ class User(Base):
                                                      
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), nullable=True)
-    tg_id = Column(BigInteger, unique=True, nullable=False)
+    tg_id = Column(BigInteger, unique=True, nullable=False, index=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     murojaatlar = relationship("Murojaat", back_populates="user")
@@ -23,7 +23,7 @@ class Murojaat(Base):
     department = Column(String(255), nullable=False)
     murojaat_type = Column(String(255), nullable=False)
     description = Column(Text, nullable=False)
-    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"))
+    user_tg_id = Column(BigInteger, ForeignKey("users.tg_id", ondelete="CASCADE"))
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     user = relationship("User", back_populates="murojaatlar")

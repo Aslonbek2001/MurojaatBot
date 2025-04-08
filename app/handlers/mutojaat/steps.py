@@ -121,14 +121,14 @@ async def step_seven(message: types.Message, state: FSMContext):
     data = await state.get_data()
 
     await message.answer(
-        f"🆕 <b>Yangi murojaat</b>\n"
-        f"👤 Foydalanuvchi ID: ({data['user_id']}) \n"
-        f"📌 Foydalanuvchi turi: {murojatchilar.get(data['user_type'])}\n"
-        f"🎯 Murojaat maqsadi: {murojat_turlari.get(data['murojaat_type'])}\n"
-        f"📩 Murojaat kimga: {xodimlar.get(data['murojaat_to']).name}\n"
-        f"👤 Ism Familiya: {data['full_name']}\n"
-        f"📞 Telefon raqami: {data['phone_number']}\n"
-        f"📝 Murojaat matni: {data['murojaat_text']}\n", 
+        f"🆕 <b>Sizning murojaat ma'lumotlaringiz:</b>\n"
+        f"👤 <b>Foydalanuvchi ID:</b> ({data['user_id']}) \n"
+        f"📌 <b>Foydalanuvchi turi:</b> {murojatchilar.get(data['user_type'])}\n"
+        f"🎯 <b>Murojaat maqsadi:</b> {murojat_turlari.get(data['murojaat_type'])}\n"
+        f"📩 <b>Murojaat kimga:</b> {xodimlar.get(data['murojaat_to']).name}\n"
+        f"👤 <b>Ism Familiya:</b> {data['full_name']}\n"
+        f"📞 <b>Telefon raqami:</b> {data['phone_number']}\n"
+        f"📝 <b>Murojaat matni:</b> {data['murojaat_text']}\n", 
         parse_mode="HTML", reply_markup=finish_buttons
     )
 
@@ -139,7 +139,7 @@ async def step_eight(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.edit_reply_markup(reply_markup=None)  # Inline tugmalarni o‘chirish
     data = await state.get_data()
     murojaat_text = (
-            f"🆕 <b>Yangi murojaat</b>\n"
+            f"🆕 <b>Murojaat</b>\n"
             f"👤 Foydalanuvchi ID: ({data['user_id']}) \n"
             f"📌 Foydalanuvchi turi: {murojatchilar.get(data['user_type'])}\n"
             f"🎯 Murojaat maqsadi: {murojat_turlari.get(data['murojaat_type'])}\n"
@@ -151,9 +151,8 @@ async def step_eight(callback: types.CallbackQuery, state: FSMContext):
     
     if callback.data == 'send':
         await callback.bot.send_message(chat_id=xodimlar.get(data['murojaat_to']).tg_id, text=murojaat_text, parse_mode="HTML")
-        
         await add_murojaat(
-                user_id=data['user_id'],
+                user_tg_id=data['user_id'],
                 full_name=data['full_name'], 
                 phone=data['phone_number'], 
                 your_position=murojatchilar.get(data['user_type']), 

@@ -5,6 +5,11 @@ from app.db.database import get_db
 from app.db.models import User, Murojaat, Javob
 
 
+####################################################
+####################################################
+####################################################
+
+
 async def add_user(name: str, tg_id: int):
     """Foydalanuvchini bazaga qo‘shish"""
     session = await get_db()  
@@ -13,22 +18,25 @@ async def add_user(name: str, tg_id: int):
         session.add(user)
     await session.commit()
 
-####################################################
-####################################################
-####################################################
-
-
 async def get_user_by_tg_id(tg_id: int):
     """Telegram ID bo‘yicha foydalanuvchini olish"""
     session = await get_db()  
     result = await session.execute(select(User).where(User.tg_id == tg_id))
     return result.scalars().first()
 
+async def get_users():
+    """Barchasini olish"""
+    session = await get_db()  
+    async with session:
+        result = await session.execute(select(User))
+        return result.scalars().all()
+
+
 ####################################################
 ####################################################
 ####################################################
 
-async def add_murojaat(full_name, phone, your_position, department, murojaat_type, description, user_id):
+async def add_murojaat(full_name, phone, your_position, department, murojaat_type, description, user_tg_id):
     """Murojaatni qo‘shish"""
     session = await get_db()
     async with session.begin(): 
@@ -39,7 +47,7 @@ async def add_murojaat(full_name, phone, your_position, department, murojaat_typ
                 department=department,
                 murojaat_type=murojaat_type,
                 description=description,
-                user_id=user_id
+                user_tg_id=user_tg_id
             )
         session.add(murojaat)
     await session.commit() 
@@ -49,14 +57,22 @@ async def add_murojaat(full_name, phone, your_position, department, murojaat_typ
 ####################################################
 
 
-async def get_murojaatlar(user_id: int, limit: int = 10, offset: int = 0):
+async def get_murojaatlar(user_tg_id):
     """Foydalanuvchiga tegishli murojaatlar ro‘yxatini olish"""
     session = await get_db()
     async with session:
         result = await session.execute(
-                select(Murojaat).where(Murojaat.user_id == user_id).limit(limit).offset(offset)
+                select(Murojaat).where(Murojaat.user_tg_id == user_tg_id)
             )
         return result.scalars().all()
+
+async def list_of_murojaatlar():
+    """Barcha murojaatlarni olish"""
+    session = await get_db()  
+    async with session:
+        result = await session.execute(select(Murojaat))
+        return result.scalars().all()
+
 
 ####################################################
 ####################################################
@@ -70,6 +86,16 @@ async def add_javob(murojaat_id: int, javob_text: str):
         session.add(javob)
         await session.commit() 
 
+async def get_javoblar_by_murojaat_id(murojaat_id):
+    """Foydalanuvchiga tegishli murojaatlar ro‘yxatini olish"""
+    session = await get_db()
+    async with session:
+        result = await session.execute(
+                select(Murojaat).where(Javob.murojaat_id == murojaat_id)
+            )
+        return result.scalars().all()
+    
+
 ####################################################
 ####################################################
 ####################################################
@@ -82,14 +108,14 @@ async def add_javob(murojaat_id: int, javob_text: str):
 #         count = result.scalar()
 #         return count
 
-async def get_users_count():
-    """Foydalanuvchilar sonini qaytarish"""
-    session = await get_db()
-    async with session:
-        stmt = select(func.count(User.id))
-        result = await session.execute(stmt)
-        count = result.scalar()
-        return count
+# async def get_users_count():
+#     """Foydalanuvchilar sonini qaytarish"""
+#     session = await get_db()
+#     async with session:
+#         stmt = select(func.count(User.id))
+#         result = await session.execute(stmt)
+#         count = result.scalar()
+#         return count
 
 ####################################################
 ####################################################
@@ -107,8 +133,8 @@ async def get_users_count():
 
 async def get_murojaatlar_count():
     """Murojaatlar sonini qaytarish"""
+    session = await get_db()
     async with session:
-        session = await get_db()
         result = await session.execute(select(func.count(Murojaat.id)))
         return result.scalar()
 
